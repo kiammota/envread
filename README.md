@@ -1,17 +1,36 @@
 # envread
-an ultra-small C library for reading .env files
 
-## functions: 
+**A minimal C library for reading `.env` files.**
 
-``` 
-FILE* envread_init(const char* path)
+`envread` is a lightweight library designed to load environment variables from `.env` files and retrieve their values through a simple API.
+
+## API
+
+```c
+FILE* envread_init(const char* path);
+char* envread(const char* key);
+void envread_close(void);
 ```
 
-``` 
-char* envread(const char* key)
-```
+## Features
 
+- Minimal API
+- Lightweight implementation
+- No external dependencies
+- Written in C
 
-``` 
-void envread_close(const char* key)
+## Usage
+
+```c
+#include "envread.h"
+
+int main(void)
+{
+    envread_init(".env");
+
+    char* port = envread("PORT");
+
+    envread_close();
+    return 0;
+}
 ```
