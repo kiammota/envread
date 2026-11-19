@@ -8,6 +8,8 @@ int main() {
     printf("file doesnt exists!");
     return 1;
   }
-  const char *test = envread(f, "TEST");
+  char *test = envread(f, "TEST");
+  char *url = envread(f, "DATABASE_URL");
+  printf("database url: %s\n", url);
   printf("test: %s", test);
 }

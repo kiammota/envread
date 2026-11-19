@@ -1,5 +1,4 @@
 #include "envread.h"
-#include <ctype.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,28 +13,38 @@ FILE *envread_init(const char *path) {
 }
 
 char *envread(FILE *f, const char *var) {
-  if (!f)
-    return NULL;
   // allocating to buffer
   size_t size = sizeof(char) * BUFFSZ;
   char *buff = malloc(size);
   // reading file and storing in buffer
   fgets(buff, size, f);
 
-  int key_size = strlen(var) + 1;
-  char *line = malloc(key_size);
+  char *line = malloc(strlen(var) + 1);
   strcat(line, var);
-  line[key_size - 1] = '=';
-  printf("linha montada: %s\n", line);
+  line[strlen(var)] = '=';
 
+  // check if line exists on file
   char *pos = strstr(buff, line);
+
   if (pos != NULL) {
-    ptrdiff_t index = pos - buff;
+
+    int index = (int)(pos - buff);
     char *value = malloc(size);
     char *p = &buff[index + strlen(line)];
-    for (int i = 0; isalnum(*p); i++, p++) {
+
+    for (int i = 0; *p != '\n'; i++, p++) {
+      if (*p == '"') {
+        i--;
+        continue;
+      }
+      if (*p == '\'') {
+        i--;
+        continue;
+      }
       value[i] = *p;
     }
+    free(buff);
+
     return value;
   }
 
